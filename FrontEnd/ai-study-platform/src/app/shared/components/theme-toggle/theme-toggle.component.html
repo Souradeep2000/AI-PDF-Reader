@@ -1,0 +1,10 @@
+<button
+  (click)="themeService.toggleTheme()"
+  class="relative w-[68px] h-[38px] rounded-full border border-white/10 bg-white/5 p-1 transition-all"
+>
+  <div
+    class="absolute top-1 w-[28px] h-[28px] rounded-full bg-gradient-to-r from-violet-500 to-emerald-400 transition-all duration-300"
+    [class.left-1]="themeService.isDarkMode()"
+    [class.left-[36px]]="!themeService.isDarkMode()"
+  ></div>
+</button>
