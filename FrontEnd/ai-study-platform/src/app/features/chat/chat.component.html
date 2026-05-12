@@ -1,1 +1,43 @@
-<p>chat works!</p>
+<div class="flex flex-col h-[calc(100vh-64px)] bg-white dark:bg-[#0b0f19]">
+  <!-- Messages -->
+  <div #chatContainer class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+    <div
+      *ngFor="let msg of messages"
+      class="flex"
+      [ngClass]="msg.role === 'user' ? 'justify-end' : 'justify-start'"
+    >
+      <div
+        class="max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow"
+        [ngClass]="
+          msg.role === 'user'
+            ? 'bg-purple-600 text-white rounded-br-sm'
+            : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-bl-sm'
+        "
+      >
+        {{ msg.content }}
+      </div>
+    </div>
+
+    <!-- Loading indicator -->
+    <div *ngIf="isLoading" class="text-sm text-gray-400">AI is thinking...</div>
+  </div>
+
+  <!-- Input box -->
+  <div class="border-t border-gray-200 dark:border-gray-800 p-4">
+    <div class="flex gap-2">
+      <input
+        [(ngModel)]="inputText"
+        (keydown.enter)="sendMessage()"
+        placeholder="Ask anything..."
+        class="flex-1 px-4 py-3 rounded-xl bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white outline-none"
+      />
+
+      <button
+        (click)="sendMessage()"
+        class="px-5 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition"
+      >
+        Send
+      </button>
+    </div>
+  </div>
+</div>
