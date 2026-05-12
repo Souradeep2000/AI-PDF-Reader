@@ -23,16 +23,12 @@ export class ThemeService {
   enableDarkMode() {
     document.documentElement.classList.add('dark');
 
-    // document.documentElement.classList.remove('light');
-
     localStorage.setItem('theme', 'dark');
 
     this.isDarkMode.set(true);
   }
 
   enableLightMode() {
-    // document.documentElement.classList.add('light');
-
     document.documentElement.classList.remove('dark');
 
     localStorage.setItem('theme', 'light');
