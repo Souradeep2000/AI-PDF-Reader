@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 interface StudyFile {
   id: string;
@@ -9,41 +10,55 @@ interface StudyFile {
 
 @Component({
   selector: 'app-upload-zone',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './upload-zone.component.html',
   styleUrl: './upload-zone.component.css',
 })
 export class UploadZoneComponent {
-  @Output() uploadCompleted = new EventEmitter<StudyFile[]>();
+  @Output() uploadCompleted = new EventEmitter<void>();
 
   uploadedFiles: StudyFile[] = [];
+
+  isUploading = signal(false);
+  uploadProgress = signal(0);
 
   handleUpload(fileList: FileList) {
     const files = Array.from(fileList);
 
-    files.forEach((file, index) => {
-      const newFile: StudyFile = {
-        id: Math.random().toString(36).substring(2),
-        name: file.name,
-        type: file.name.split('.').pop() || 'file',
-        status: 'uploaded',
-      };
+    if (!files.length) return;
 
-      this.uploadedFiles.push(newFile);
+    this.isUploading.set(true);
+    this.uploadProgress.set(0);
 
-      setTimeout(() => {
-        newFile.status = 'processing';
+    // Fake premium upload animation
+    const interval = setInterval(() => {
+      const current = this.uploadProgress();
+
+      if (current >= 100) {
+        clearInterval(interval);
+
+        files.forEach((file) => {
+          const newFile: StudyFile = {
+            id: Math.random().toString(36).substring(2),
+            name: file.name,
+            type: file.name.split('.').pop() || 'file',
+            status: 'ready',
+          };
+
+          this.uploadedFiles.push(newFile);
+        });
 
         setTimeout(() => {
-          newFile.status = 'ready';
+          this.isUploading.set(false);
+          this.uploadCompleted.emit();
+        }, 400);
 
-          // Trigger only once after first file ready
-          if (index === 0) {
-            this.uploadCompleted.emit(this.uploadedFiles);
-          }
-        }, 1200);
-      }, 500);
-    });
+        return;
+      }
+
+      this.uploadProgress.update((v) => v + 4);
+    }, 80);
   }
 
   onFileSelected(event: Event) {

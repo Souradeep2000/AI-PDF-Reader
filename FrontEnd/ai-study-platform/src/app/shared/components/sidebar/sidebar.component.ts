@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChatStateService } from '../../../core/services/chat-state.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -10,4 +11,6 @@ export class SidebarComponent {
 
   @Output()
   closeSidebar = new EventEmitter<void>();
+
+  constructor(public chatState: ChatStateService) {}
 }

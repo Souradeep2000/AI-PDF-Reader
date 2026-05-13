@@ -24,12 +24,43 @@
         (change)="onFileSelected($event)"
       />
 
+      <!-- Upload Button -->
       <button
+        *ngIf="!isUploading()"
         (click)="fileInput.click()"
-        class="mt-8 rounded-2xl px-6 py-3 bg-gradient-to-r from-violet-600 to-emerald-500 font-medium text-white"
+        class="mt-8 rounded-2xl px-6 py-3 bg-gradient-to-r from-violet-600 to-emerald-500 font-medium text-white hover:scale-[1.02] transition"
       >
         Upload Notes
       </button>
+
+      <!-- Premium Loading State -->
+      <div *ngIf="isUploading()" class="mt-8 max-w-md mx-auto">
+        <div class="flex justify-between mb-3">
+          <p class="text-sm text-slate-700 dark:text-slate-300">
+            Processing with AI...
+          </p>
+
+          <span
+            class="text-sm font-medium text-violet-600 dark:text-violet-400"
+          >
+            {{ uploadProgress() }}%
+          </span>
+        </div>
+
+        <!-- Progress bar -->
+        <div
+          class="h-3 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-800"
+        >
+          <div
+            class="h-full rounded-full bg-gradient-to-r from-violet-600 to-emerald-500 transition-all duration-300"
+            [style.width.%]="uploadProgress()"
+          ></div>
+        </div>
+
+        <p class="mt-3 text-xs text-slate-500 dark:text-slate-400">
+          Extracting text • Generating embeddings • Preparing AI
+        </p>
+      </div>
     </div>
   </div>
 
