@@ -1,4 +1,8 @@
-<app-navbar (menuClick)="toggleSidebar()" />
+<app-navbar
+  (menuClick)="toggleSidebar()"
+  [showChat]="chatState.isChatOpen()"
+  (closeChat)="closeChat()"
+/>
 
 <div class="flex h-[calc(100vh-72px)] overflow-hidden relative">
   <app-sidebar [isOpen]="isSidebarOpen()" (closeSidebar)="toggleSidebar()" />

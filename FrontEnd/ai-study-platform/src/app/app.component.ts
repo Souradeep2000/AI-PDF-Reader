@@ -1,7 +1,9 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
+import { ChatStateService } from './core/services/chat-state.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +14,13 @@ import { SidebarComponent } from './shared/components/sidebar/sidebar.component'
 export class AppComponent {
   isSidebarOpen = signal(true);
 
+  constructor(public chatState: ChatStateService) {}
+
   toggleSidebar() {
     this.isSidebarOpen.update((v) => !v);
+  }
+
+  closeChat() {
+    this.chatState.closeChat();
   }
 }

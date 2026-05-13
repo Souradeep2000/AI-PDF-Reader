@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 
 @Component({
@@ -9,4 +9,6 @@ import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 })
 export class NavbarComponent {
   @Output() menuClick = new EventEmitter<void>();
+  @Input() showChat = false;
+  @Output() closeChat = new EventEmitter<void>();
 }

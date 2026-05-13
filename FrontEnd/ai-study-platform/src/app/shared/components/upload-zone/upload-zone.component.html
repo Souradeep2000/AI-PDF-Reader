@@ -1,1 +1,56 @@
-<p>upload-zone works!</p>
+<div>
+  <!-- Upload Card -->
+  <div
+    class="mt-10 w-full max-w-4xl rounded-[24px] md:rounded-[32px] border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 shadow-sm backdrop-blur-xl p-5 md:p-10"
+  >
+    <div
+      class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-3xl p-8 md:p-16 hover:border-violet-500 transition text-center"
+    >
+      <h3
+        class="text-slate-900 dark:text-white text-lg md:text-2xl font-semibold"
+      >
+        Upload your study materials
+      </h3>
+
+      <p class="text-slate-600 dark:text-slate-400 mt-3">
+        Drag & drop PDFs, DOCX, PPT, or images
+      </p>
+
+      <input
+        #fileInput
+        type="file"
+        multiple
+        hidden
+        (change)="onFileSelected($event)"
+      />
+
+      <button
+        (click)="fileInput.click()"
+        class="mt-8 rounded-2xl px-6 py-3 bg-gradient-to-r from-violet-600 to-emerald-500 font-medium text-white"
+      >
+        Upload Notes
+      </button>
+    </div>
+  </div>
+
+  <!-- Prompt chips -->
+  <div class="mt-10 flex flex-wrap gap-3 justify-center">
+    <button
+      class="rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 px-5 py-3 hover:bg-slate-200 dark:hover:bg-white/10 transition"
+    >
+      Explain DBMS Normalization
+    </button>
+
+    <button
+      class="rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 px-5 py-3 hover:bg-slate-200 dark:hover:bg-white/10 transition"
+    >
+      Generate CN Unit Test
+    </button>
+
+    <button
+      class="rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 px-5 py-3 hover:bg-slate-200 dark:hover:bg-white/10 transition"
+    >
+      Summarize Operating System
+    </button>
+  </div>
+</div>
