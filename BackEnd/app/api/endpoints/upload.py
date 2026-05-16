@@ -1,0 +1,75 @@
+import os
+from uuid import uuid4
+
+from fastapi import (
+    APIRouter,
+    UploadFile,
+    File,
+    HTTPException
+)
+
+router = APIRouter()
+
+UPLOAD_DIR = "uploads"
+
+ALLOWED_TYPES = {
+    "application/pdf",
+
+    "image/png",
+    "image/jpeg",
+
+    "text/plain",
+
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+}
+
+ALLOWED_EXTENSIONS = {
+    ".pdf",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".txt",
+    ".docx"
+}
+
+
+@router.post("/upload")
+async def upload_file(
+    file: UploadFile = File(...)
+):
+    extension = os.path.splitext(
+        file.filename
+    )[1].lower()
+
+    if (
+        file.content_type not in ALLOWED_TYPES
+        and extension not in ALLOWED_EXTENSIONS
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="Unsupported file type"
+        )
+
+    os.makedirs(
+        UPLOAD_DIR,
+        exist_ok=True
+    )
+
+    unique_filename = (
+        f"{uuid4()}_{file.filename}"
+    )
+
+    file_path = os.path.join(
+        UPLOAD_DIR,
+        unique_filename
+    )
+
+    with open(file_path, "wb") as f:
+        content = await file.read()
+        f.write(content)
+
+    return {
+        "message": "File uploaded successfully",
+        "filename": unique_filename,
+        "file_type": file.content_type
+    }
