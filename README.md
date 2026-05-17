@@ -15,6 +15,13 @@ Built with a scalable architecture focused on intelligent document understanding
 - OCR support for scanned PDFs (planned)
 - Background document processing pipeline
 
+```PDF → PyMuPDF
+Image   → OCR (Teserract ocr)
+DOCX    → python-docx
+TXT     → direct read
+PPTX    → python-pptx
+```
+
 ### 💬 Context-Aware Document Chat
 
 - Ask questions directly from uploaded PDFs
@@ -57,7 +64,13 @@ Angular Frontend (PWA)
  │ RabbitMQ Queue          │
  └─────────────────────────┘
         ↓
- Document Processing Pipeline
+ detect file type
+        ↓
+ route to parser
+        ↓
+  extract text
+        ↓
+     chunking
         ↓
  Embeddings + Semantic Retrieval + RAG
 ```
@@ -103,13 +116,41 @@ http://localhost:4200
 
 ---
 
-### 3️⃣ Backend Setup (FastAPI)
+### 3️⃣ Backend Setup (FastAPI) Docker
 
 Open a new terminal and navigate to backend:
 
 ```bash
 cd Backend
 ```
+
+For 1st time build For docker:
+
+```bash
+docker build -t pdf-qna-backend .
+```
+
+---
+
+To run server:
+
+```bash
+docker run -p 8000:8000
+--name pdf-qna-dev
+-v "$(pwd):/workspace"
+pdf-qna-backend
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Backend will run on:
+
+```text
+http://localhost:8000
+```
+
+---
+
+### 3️⃣ Without Docker (FastAPI)
 
 Create virtual environment:
 
@@ -122,7 +163,7 @@ Activate environment:
 #### Windows
 
 ```bash
-venv\Scripts\activate
+source venv/Scripts/activate
 ```
 
 #### Mac / Linux
@@ -140,7 +181,7 @@ pip install -r requirements.txt
 Run backend server:
 
 ```bash
-uvicorn main:app --reload
+PYTHONPATH=. uvicorn app.main:app --reload
 ```
 
 OR (if using app folder structure)
@@ -154,3 +195,5 @@ Backend will run on:
 ```text
 http://localhost:8000
 ```
+
+---
