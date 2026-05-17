@@ -1,5 +1,6 @@
 import os
 from uuid import uuid4
+from pathlib import Path
 
 from fastapi import (
     APIRouter,
@@ -7,6 +8,7 @@ from fastapi import (
     File,
     HTTPException
 )
+from app.services.ingestion.text_extractor import TextExtractor
 
 router = APIRouter()
 
@@ -42,8 +44,8 @@ async def upload_file(
     )[1].lower()
 
     if (
-        file.content_type not in ALLOWED_TYPES
-        and extension not in ALLOWED_EXTENSIONS
+    file.content_type not in ALLOWED_TYPES
+    or extension not in ALLOWED_EXTENSIONS
     ):
         raise HTTPException(
             status_code=400,
@@ -68,8 +70,21 @@ async def upload_file(
         content = await file.read()
         f.write(content)
 
+    try:
+        extracted_text = (
+        TextExtractor.extract_text(file_path)
+        )
+
+    except Exception as e:
+        raise HTTPException(
+        status_code=500,
+        detail=f"Text extraction failed: {str(e)}"
+    )
+
     return {
         "message": "File uploaded successfully",
         "filename": unique_filename,
-        "file_type": file.content_type
+        "file_type": Path(file.filename).suffix,
+        "characters_extracted": len(extracted_text),
+        "text_preview": extracted_text[:500]
     }
