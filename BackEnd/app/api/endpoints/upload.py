@@ -8,7 +8,11 @@ from fastapi import (
     File,
     HTTPException
 )
+
 from app.services.ingestion.text_extractor import TextExtractor
+from app.services.ingestion.text_cleaner import TextCleaner
+from app.services.ingestion.chunking_service import ChunkingService
+
 
 router = APIRouter()
 
@@ -44,8 +48,8 @@ async def upload_file(
     )[1].lower()
 
     if (
-    file.content_type not in ALLOWED_TYPES
-    or extension not in ALLOWED_EXTENSIONS
+        file.content_type not in ALLOWED_TYPES
+        or extension not in ALLOWED_EXTENSIONS
     ):
         raise HTTPException(
             status_code=400,
@@ -71,20 +75,43 @@ async def upload_file(
         f.write(content)
 
     try:
+        # 1. Extract text
         extracted_text = (
-        TextExtractor.extract_text(file_path)
+            TextExtractor.extract_text(
+                file_path
+            )
+        )
+
+        # 2. Clean text
+        cleaned_text = (
+            TextCleaner.clean(
+                extracted_text
+            )
+        )
+
+        # 3. Chunk text
+        chunks = (
+            ChunkingService.chunk_text(
+                cleaned_text
+            )
         )
 
     except Exception as e:
         raise HTTPException(
-        status_code=500,
-        detail=f"Text extraction failed: {str(e)}"
-    )
+            status_code=500,
+            detail=f"Processing failed: {str(e)}"
+        )
 
     return {
         "message": "File uploaded successfully",
         "filename": unique_filename,
-        "file_type": Path(file.filename).suffix,
-        "characters_extracted": len(extracted_text),
-        "text_preview": extracted_text[:500]
+        "file_type": extension,
+        "characters_extracted": len(
+            cleaned_text
+        ),
+        "total_chunks": len(chunks),
+        "preview_chunk": (
+            chunks[0][:300]
+            if chunks else ""
+        )
     }
