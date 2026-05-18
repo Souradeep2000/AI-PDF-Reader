@@ -50,3 +50,5 @@ The vision model isn't perfect and frequently confuses lookalike characters (lik
 ---
 
 # Behind the Scenes: How Next Works
+
+---
