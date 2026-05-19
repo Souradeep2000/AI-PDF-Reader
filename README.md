@@ -136,6 +136,7 @@ cd Backend
 For 1st time build For docker: delete docker desktop image first
 
 ```bash
+docker compose down
 docker compose up --build
 ```
 
@@ -151,6 +152,30 @@ Backend will run on:
 
 ```text
 http://localhost:8000
+```
+
+Check logs :
+
+```bash
+docker logs pdf-qna-backend
+```
+
+check postgres db on startup:
+
+```bash
+docker exec -it pdf-qna-postgres psql -U postgres
+```
+
+```sql
+\l
+\dt
+```
+
+You should finally see:
+
+```text
+documents
+document_chunks
 ```
 
 ---
