@@ -111,7 +111,7 @@ async def upload_file(
         ),
         "total_chunks": len(chunks),
         "preview_chunk": (
-            chunks[0][:300]
+            chunks[0]["content"][:300]
             if chunks else ""
         )
     }

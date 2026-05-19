@@ -136,7 +136,7 @@ cd Backend
 For 1st time build For docker: delete docker desktop image first
 
 ```bash
-docker build -t pdf-qna-backend .
+docker compose up --build
 ```
 
 ---
@@ -144,7 +144,7 @@ docker build -t pdf-qna-backend .
 To run server:
 
 ```bash
-docker run -p 8000:8000 --name pdf-qna-dev -v "$(pwd):/workspace" pdf-qna-backend uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+docker compose up
 ```
 
 Backend will run on:

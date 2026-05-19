@@ -5,11 +5,18 @@ class TextCleaner:
 
     @staticmethod
     def clean(text: str) -> str:
-        text = re.sub(r"\s+", " ", text)
 
+        # remove excessive empty lines
         text = re.sub(
-            r"\n\s*\n",
+            r"\n\s*\n+",
             "\n",
+            text
+        )
+
+        # normalize spaces/tabs only
+        text = re.sub(
+            r"[ \t]+",
+            " ",
             text
         )
 

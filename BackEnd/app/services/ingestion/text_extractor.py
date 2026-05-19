@@ -38,14 +38,30 @@ class TextExtractor:
 
         try:
             for page in pdf:
-                page_text = page.get_text()
 
-                if page_text.strip():
+                page_text = page.get_text().strip()
+
+                if page_text:
                     text.append(page_text)
+
+                else:
+                    # OCR fallback
+                    pix = page.get_pixmap(dpi=300)
+
+                    image = Image.frombytes(
+                        "RGB",
+                        [pix.width, pix.height],
+                        pix.samples
+                    )
+
+                    ocr_text = pytesseract.image_to_string(image)
+
+                    if ocr_text.strip():
+                        text.append(ocr_text)
 
         finally:
             pdf.close()
-
+            
         return "\n".join(text).strip()
 
     @staticmethod

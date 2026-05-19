@@ -1,9 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.api.router import api_router
 
-from app.api.endpoints.upload import (
-    router as upload_router
-)
 
 app = FastAPI(
     title="AI Study Platform API",
@@ -18,13 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Routes
-app.include_router(
-    upload_router,
-    prefix="/api",
-    tags=["Upload"]
-)
-
+app.include_router(api_router)
 
 @app.get("/")
 def health_check():

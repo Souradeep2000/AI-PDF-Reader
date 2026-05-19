@@ -7,14 +7,19 @@ class ChunkingService:
 
     @staticmethod
     def chunk_text(text: str):
-        splitter = (
-            RecursiveCharacterTextSplitter(
-                chunk_size=800,
-                chunk_overlap=150,
-                length_function=len
-            )
+
+        splitter = RecursiveCharacterTextSplitter(
+            chunk_size=800,
+            chunk_overlap=150,
+            length_function=len
         )
 
-        chunks = splitter.split_text(text)
+        chunks = splitter.create_documents([text])
 
-        return chunks
+        return [
+            {
+                "chunk_index": idx,
+                "content": chunk.page_content
+            }
+            for idx, chunk in enumerate(chunks)
+        ]
