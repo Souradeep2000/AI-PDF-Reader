@@ -59,7 +59,6 @@ Angular Frontend (PWA)
      FastAPI Backend
         ↓
  ┌─────────────────────────┐
- │ PostgreSQL + pgvector   │
  │ Redis Cache             │
  │ RabbitMQ Queue          │
  └─────────────────────────┘
@@ -68,11 +67,21 @@ Angular Frontend (PWA)
         ↓
  route to parser
         ↓
-  extract text
+Text Extraction (PDF/DOCX/TXT/Image OCR)
+        ↓
+Text Cleaning
         ↓
      chunking
         ↓
- Embeddings + Semantic Retrieval + RAG
+   Embeddings
+        ↓
+ ┌─────────────────────────┐
+ │ PostgreSQL + pgvector   │
+ └─────────────────────────┘
+        ↓
+  Semantic Retrieval
+        ↓
+    RAG Q&A
 ```
 
 ---
@@ -124,7 +133,7 @@ Open a new terminal and navigate to backend:
 cd Backend
 ```
 
-For 1st time build For docker:
+For 1st time build For docker: delete docker desktop image first
 
 ```bash
 docker build -t pdf-qna-backend .
@@ -135,11 +144,7 @@ docker build -t pdf-qna-backend .
 To run server:
 
 ```bash
-docker run -p 8000:8000
---name pdf-qna-dev
--v "$(pwd):/workspace"
-pdf-qna-backend
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+docker run -p 8000:8000 --name pdf-qna-dev -v "$(pwd):/workspace" pdf-qna-backend uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 Backend will run on:
