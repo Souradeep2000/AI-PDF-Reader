@@ -81,7 +81,7 @@ Text Cleaning
         ↓
   Semantic Retrieval
         ↓
-    RAG Q&A
+    RAG Q&A ( Ollama local LLM)
 ```
 
 ---

@@ -1,7 +1,8 @@
 from fastapi import APIRouter
 from app.api.endpoints import (
     upload,
-    test_embedding
+    test_embedding,
+    search
 )
 
 api_router = APIRouter()
@@ -16,4 +17,10 @@ api_router.include_router(
     upload.router,
     prefix="/api",
     tags=["Upload"]
+)
+
+api_router.include_router(
+    search.router,
+    prefix="/api",
+    tags=["Search"]
 )
