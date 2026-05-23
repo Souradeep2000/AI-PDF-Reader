@@ -12,9 +12,15 @@ from fastapi import (
 from app.services.ingestion.text_extractor import TextExtractor
 from app.services.ingestion.text_cleaner import TextCleaner
 from app.services.ingestion.chunking_service import ChunkingService
+from app.services.ingestion.ingestion_service import IngestionService
+
+from sqlalchemy.orm import Session
+from fastapi import Depends
+from app.db.session import get_db
 
 
 router = APIRouter()
+
 
 UPLOAD_DIR = "uploads"
 
@@ -41,8 +47,10 @@ ALLOWED_EXTENSIONS = {
 
 @router.post("/upload")
 async def upload_file(
-    file: UploadFile = File(...)
-):
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
+    ):
+
     extension = os.path.splitext(
         file.filename
     )[1].lower()
@@ -96,6 +104,14 @@ async def upload_file(
             )
         )
 
+        result = IngestionService.save_document_chunks(
+            db=db,
+            filename=unique_filename,
+            original_filename=file.filename,
+            file_type=file.content_type,
+            chunks=chunks
+        )
+
     except Exception as e:
         raise HTTPException(
             status_code=500,
@@ -104,6 +120,7 @@ async def upload_file(
 
     return {
         "message": "File uploaded successfully",
+        "document_id": result["document_id"],
         "filename": unique_filename,
         "file_type": extension,
         "characters_extracted": len(

@@ -2,6 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.router import api_router
 from app.db.session import init_db
+from app.db.base import Base
+from app.db.session import engine
+
+
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 

@@ -1,5 +1,10 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
+from app.db.base import Base
+
+# Import models so SQLAlchemy registers them
+from app.db.models.document import Document
+from app.db.models.document_chunk import DocumentChunk
 
 from app.core.config import DATABASE_URL
 
@@ -14,7 +19,6 @@ SessionLocal = sessionmaker(
 
 
 def init_db():
-    from app.db.base import Base
 
     with engine.connect() as conn:
         conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
@@ -29,3 +33,12 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+
+#         main.py
+#    → startup()
+#       → init_db()
+#           → imports models
+#           → create extension vector
+#           → create tables

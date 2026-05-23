@@ -1,8 +1,7 @@
 from fastapi import APIRouter
 
-from app.services.embeddings.embedding_service import (
-    EmbeddingService
-)
+from app.services.embeddings.embedding_service import EmbeddingService
+
 
 router = APIRouter()
 
