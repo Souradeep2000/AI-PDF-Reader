@@ -25,3 +25,29 @@ body {
 * {
   box-sizing: border-box;
 }
+
+html,
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.25) transparent;
+}
+
+/* 2. Webkit Engine (Chrome, Safari, Edge, Opera) - Global & Specific overrides */
+::-webkit-scrollbar {
+  width: 6px; /* Match your 6px preference */
+  height: 6px; /* For horizontal flows */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.25); /* Muted gray thumb */
+  border-radius: 9999px;
+}
+
+/* 3. Interactive State (Hover turns into the purple hue) */
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(147, 51, 234, 0.45);
+}

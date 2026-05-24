@@ -1,8 +1,5 @@
 <div class="flex flex-col h-[calc(100vh-64px)] bg-white dark:bg-[#0b0f19]">
-  <div
-    #chatContainer
-    class="flex-1 overflow-y-auto px-4 py-6 space-y-4 [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-400/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-purple-600/40"
-  >
+  <div #chatContainer class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
     <div
       *ngFor="let msg of messages()"
       class="flex"
