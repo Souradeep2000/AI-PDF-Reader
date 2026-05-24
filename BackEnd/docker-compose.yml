@@ -45,6 +45,9 @@ services:
     volumes:
       - ollama_data:/root/.ollama
 
+    environment:
+      OLLAMA_KEEP_ALIVE: "1h"
+
 volumes:
   postgres_data:
   ollama_data:

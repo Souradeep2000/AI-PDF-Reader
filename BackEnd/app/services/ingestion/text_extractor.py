@@ -33,27 +33,23 @@ class TextExtractor:
     @staticmethod
     def extract_pdf(file_path: str) -> str:
         text = []
-
         pdf = fitz.open(file_path)
 
         try:
             for page in pdf:
-
                 page_text = page.get_text().strip()
 
-                if page_text:
+                # Fix: If fitz extracts ANY actual words/letters, use it immediately!
+                if any(c.isalpha() for c in page_text):
                     text.append(page_text)
-
                 else:
-                    # OCR fallback
+                    # Clear OCR Fallback: Only run if the page text extraction yielded absolutely no letters
                     pix = page.get_pixmap(dpi=300)
-
                     image = Image.frombytes(
                         "RGB",
                         [pix.width, pix.height],
                         pix.samples
                     )
-
                     ocr_text = pytesseract.image_to_string(image)
 
                     if ocr_text.strip():
@@ -63,7 +59,7 @@ class TextExtractor:
             pdf.close()
             
         return "\n".join(text).strip()
-
+    
     @staticmethod
     def extract_docx(file_path: str) -> str:
         document = Document(file_path)

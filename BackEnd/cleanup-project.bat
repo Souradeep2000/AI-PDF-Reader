@@ -15,5 +15,8 @@ docker image prune -f
 echo Clearing build cache...
 docker builder prune -f
 
+echo Removing unused networks/layers...
+docker system prune -f
+
 echo Done! Keeping volumes safe (DB preserved)
 pause

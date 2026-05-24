@@ -1,6 +1,14 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  NgZone,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+import { ChatApiService } from '../../core/services/chat-api.service';
 
 interface Message {
   role: 'user' | 'ai';
@@ -10,51 +18,90 @@ interface Message {
 
 @Component({
   selector: 'app-chat',
-  imports: [FormsModule, CommonModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './chat.component.html',
 })
 export class ChatComponent {
-  messages: Message[] = [
+  constructor(
+    private chatApi: ChatApiService,
+    private ngZone: NgZone,
+  ) {}
+
+  messages = signal<Message[]>([
     {
       role: 'ai',
       content: 'Hi! Ask me anything about your studies 👋',
       timestamp: new Date(),
     },
-  ];
+  ]);
 
   inputText = '';
   isLoading = false;
 
-  @ViewChild('chatContainer') chatContainer!: ElementRef;
+  @ViewChild('chatContainer')
+  chatContainer!: ElementRef;
 
-  sendMessage() {
+  async sendMessage() {
     if (!this.inputText.trim()) return;
-
-    // push user message
-    this.messages.push({
-      role: 'user',
-      content: this.inputText,
-      timestamp: new Date(),
-    });
 
     const userQuery = this.inputText;
     this.inputText = '';
+    this.isLoading = true;
+
+    this.messages.update((msgs) => [
+      ...msgs,
+      { role: 'user', content: userQuery, timestamp: new Date() },
+      { role: 'ai', content: '', timestamp: new Date() },
+    ]);
 
     this.scrollToBottom();
 
-    // fake AI response (replace later with FastAPI)
-    this.isLoading = true;
+    try {
+      const finalData = await this.chatApi.streamAsk(userQuery, 5, (token) => {
+        this.messages.update((msgs) => {
+          const updated = [...msgs];
+          const lastIdx = updated.length - 1;
 
-    setTimeout(() => {
-      this.messages.push({
-        role: 'ai',
-        content: `You said: "${userQuery}". (AI response placeholder)`,
-        timestamp: new Date(),
+          if (updated[lastIdx] && updated[lastIdx].role === 'ai') {
+            updated[lastIdx] = {
+              ...updated[lastIdx],
+              content: updated[lastIdx].content + token,
+            };
+          }
+          return updated;
+        });
+        this.scrollToBottom();
       });
 
+      if (finalData && finalData.answer) {
+        this.messages.update((msgs) => {
+          const updated = [...msgs];
+          const lastIdx = updated.length - 1;
+
+          if (updated[lastIdx] && updated[lastIdx].role === 'ai') {
+            // Only overwrite if the real-time stream failed to fetch text tokens
+            if (updated[lastIdx].content.trim().length === 0) {
+              updated[lastIdx] = {
+                ...updated[lastIdx],
+                content: finalData.answer,
+              };
+            }
+          }
+          return updated;
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      this.messages.update((msgs) => {
+        const updated = [...msgs];
+        updated[updated.length - 1].content = 'Something went wrong.';
+        return updated;
+      });
+    } finally {
       this.isLoading = false;
       this.scrollToBottom();
-    }, 800);
+    }
   }
 
   scrollToBottom() {

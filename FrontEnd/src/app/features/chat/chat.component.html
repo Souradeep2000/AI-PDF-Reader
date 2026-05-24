@@ -1,13 +1,16 @@
 <div class="flex flex-col h-[calc(100vh-64px)] bg-white dark:bg-[#0b0f19]">
-  <!-- Messages -->
-  <div #chatContainer class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+  <div
+    #chatContainer
+    class="flex-1 overflow-y-auto px-4 py-6 space-y-4 [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-400/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-purple-600/40"
+  >
     <div
-      *ngFor="let msg of messages"
+      *ngFor="let msg of messages()"
       class="flex"
       [ngClass]="msg.role === 'user' ? 'justify-end' : 'justify-start'"
     >
       <div
-        class="max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow"
+        *ngIf="msg.content || msg.role === 'user'"
+        class="max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow whitespace-pre-wrap"
         [ngClass]="
           msg.role === 'user'
             ? 'bg-purple-600 text-white rounded-br-sm'
@@ -18,11 +21,9 @@
       </div>
     </div>
 
-    <!-- Loading indicator -->
     <div *ngIf="isLoading" class="text-sm text-gray-400">AI is thinking...</div>
   </div>
 
-  <!-- Input box -->
   <div class="border-t border-gray-200 dark:border-gray-800 p-4">
     <div class="flex gap-2">
       <input
