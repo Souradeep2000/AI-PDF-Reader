@@ -1,6 +1,6 @@
-# 🚀 AI Study Platform (PDF Q&A & Test Generator)
+# 🚀 AI DOCS READER Platform (PDF/DOCX/ANY FILES Q&A & Test Generator)
 
-An AI-powered study platform that transforms PDFs into an interactive learning experience. Upload study material, ask contextual questions, generate tests, and gain study insights.
+An AI-powered study platform that transforms all Documents into an interactive learning or Q&A experience. Upload study/work material, ask contextual questions, generate tests, and gain study insights.
 
 Built with a scalable architecture focused on intelligent document understanding, semantic retrieval, and production-oriented engineering practices.
 
@@ -8,14 +8,15 @@ Built with a scalable architecture focused on intelligent document understanding
 
 ## ✨ Features
 
-### 📄 Intelligent PDF Processing
+### 📄 Intelligent FILES Processing
 
-- Drag & drop PDF upload
+- Drag & drop FILE upload
 - Text extraction from documents
-- OCR support for scanned PDFs (planned)
+- OCR support for scanned Files
 - Background document processing pipeline
 
-```PDF → PyMuPDF
+```
+PDF     → PyMuPDF
 Image   → OCR (Teserract ocr)
 DOCX    → python-docx
 TXT     → direct read
@@ -24,7 +25,7 @@ PPTX    → python-pptx
 
 ### 💬 Context-Aware Document Chat
 
-- Ask questions directly from uploaded PDFs
+- Ask questions directly from uploaded Files
 - Contextual answers grounded in document content
 - Streaming responses for real-time interaction
 - Citation-based answer generation
@@ -81,7 +82,7 @@ Text Cleaning
         ↓
   Semantic Retrieval
         ↓
-    RAG Q&A ( Ollama local LLM)
+    RAG Q&A ( Ollama local LLM/Gemini Prod LLM)
 ```
 
 ---

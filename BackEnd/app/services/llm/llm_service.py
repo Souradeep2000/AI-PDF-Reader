@@ -22,3 +22,10 @@ class LLMService:
 
         llm = LLMService.get_llm()
         return llm.generate(prompt)
+    
+    @staticmethod
+    def stream_generate(prompt: str):
+
+        llm = LLMService.get_llm()
+
+        return llm.stream_generate(prompt)

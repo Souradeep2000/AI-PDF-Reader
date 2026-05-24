@@ -26,3 +26,14 @@ class GeminiLLM(BaseLLM):
         )
 
         return response.text
+    
+    def stream_generate(
+        self,
+        prompt: str
+    ):
+
+        response = self.generate(
+            prompt
+        )
+
+        yield response

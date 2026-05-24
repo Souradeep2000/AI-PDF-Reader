@@ -1,5 +1,5 @@
-# app/services/llm/ollama_llm.py
 
+import json
 import requests
 from app.services.llm.base import BaseLLM
 
@@ -30,3 +30,48 @@ class OllamaLLM(BaseLLM):
             "content",
             "No response generated."
         )
+    
+    def stream_generate(self, prompt: str):
+        payload = {
+            "model": self.model,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            "stream": True
+        }
+
+        with requests.post(
+            self.url,
+            json=payload,
+            stream=True,
+            timeout=120
+        ) as response:
+
+            response.raise_for_status()
+
+            for line in (
+                response.iter_lines()
+            ):
+
+                if not line:
+                    continue
+
+                chunk = json.loads(
+                    line.decode("utf-8")
+                )
+
+                token = (
+                    chunk.get(
+                        "message",
+                        {}
+                    ).get(
+                        "content",
+                        ""
+                    )
+                )
+
+                if token:
+                    yield token
