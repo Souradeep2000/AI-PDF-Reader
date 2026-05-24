@@ -88,6 +88,6 @@ When a PDF is uploaded, the backend processes it through a highly optimized docu
 
 ---
 
-# Behind the Scenes: How Next Works
+# Behind the scope: How Next Works To be added
 
 ---

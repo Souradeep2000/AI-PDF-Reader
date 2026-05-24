@@ -2,7 +2,7 @@
 
 import os
 from app.services.llm.ollama_llm import OllamaLLM
-from app.services.llm.openai_llm import OpenAILLM
+from app.services.llm.gemini_llm import GeminiLLM
 
 
 class LLMService:
@@ -13,9 +13,9 @@ class LLMService:
         ENV = os.getenv("ENV", "local")
 
         if ENV == "local":
-            return OllamaLLM(model="llama3")
+            return OllamaLLM(model="qwen2.5:3b")
 
-        return OpenAILLM()
+        return GeminiLLM()
 
     @staticmethod
     def generate(prompt: str):

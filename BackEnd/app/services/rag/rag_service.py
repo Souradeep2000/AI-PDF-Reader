@@ -1,30 +1,66 @@
 from sqlalchemy.orm import Session
-from app.services.rag.search_service import SearchService
-from BackEnd.app.services.llm.llm_service import LLMService
+
+from app.services.rag.search_service import (
+    SearchService
+)
+from app.services.llm.llm_service import (
+    LLMService
+)
 
 
 class RAGService:
 
     @staticmethod
-    def ask(db: Session, query: str, top_k: int = 5):
+    def ask(
+        db: Session,
+        query: str,
+        top_k: int = 5
+    ):
 
         # 1. Retrieve relevant chunks
-        chunks = SearchService.semantic_search(db, query, top_k)
+        chunks = SearchService.semantic_search(
+            db,
+            query,
+            top_k
+        )
 
-        if not chunks:
+        # 2. Filter weak matches
+        relevant_chunks = [
+            chunk
+            for chunk in chunks
+            if chunk["score"] > 0.65
+        ]
+
+        if not relevant_chunks:
             return {
-                "answer": "I couldn't find relevant information in your documents.",
+                "answer":
+                "I couldn't find relevant information in your uploaded documents.",
                 "sources": []
             }
 
-        # 2. Build context
+        # 3. Build context
         context = "\n\n".join(
-            [f"[Source {i+1}]\n{c['content']}" for i, c in enumerate(chunks)]
+            [
+                f"Source {i+1}:\n{c['content']}"
+                for i, c in enumerate(
+                    relevant_chunks
+                )
+            ]
         )
 
-        # 3. Prompt
+        # 4. Prompt
         prompt = f"""
-You are a helpful AI assistant. Use only the context below to answer.
+You are an AI study assistant.
+
+You MUST answer ONLY from the provided context.
+
+Rules:
+- Do NOT use outside knowledge.
+- If the answer is not explicitly present in the context,
+  say:
+  "I don't know based on the uploaded document."
+- Keep the answer concise.
+- Cite concepts from retrieved content.
 
 Context:
 {context}
@@ -32,16 +68,15 @@ Context:
 Question:
 {query}
 
-Rules:
-- If answer is not in context, say you don't know.
-- Be precise and concise.
-- Always base answer on sources.
+Answer:
 """
 
-        # 4. Call LLM
-        answer = LLMService.generate(prompt)
+        # 5. Generate response
+        answer = LLMService.generate(
+            prompt
+        )
 
         return {
             "answer": answer,
-            "sources": chunks
+            "sources": relevant_chunks
         }
