@@ -1,6 +1,6 @@
 ---
 title: AI Docs Reader Backend
-emoji: 🚀
+emoji: 🔥
 colorFrom: blue
 colorTo: green
 sdk: docker
