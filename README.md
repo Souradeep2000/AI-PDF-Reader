@@ -10,4 +10,4 @@ dockerfile: BackEnd/Dockerfile.hf
 
 # 🚀 AI DOCS READER Platform (PDF/DOCX/ANY FILES Q&A & Test Generator)
 
-An AI-powered study platform that transforms all Documents into an interactive learning or Q&A experience.
+... leave the rest of your original architectural text here untouched ...
