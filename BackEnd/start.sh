@@ -28,7 +28,7 @@ done
 
 # Pre-pull your lightweight model so it's ready instantly
 echo "Pulling Ollama model..."
-ollama pull llama3:8b
+ollama pull phi3:mini
 
 # 3. Start FastAPI application on Hugging Face's mandatory port (7860)
 echo "Starting FastAPI app..."

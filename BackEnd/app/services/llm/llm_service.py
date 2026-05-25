@@ -13,7 +13,7 @@ class LLMService:
         ENV = os.getenv("ENV", "local")
 
         if ENV == "local":
-            return OllamaLLM(model="qwen2.5:3b")
+            return OllamaLLM(model="phi3:mini")
 
         return GeminiLLM()
 
