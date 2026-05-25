@@ -31,7 +31,7 @@ export class ChatComponent {
   messages = signal<Message[]>([
     {
       role: 'ai',
-      content: 'Hi! Ask me anything about your studies 👋',
+      content: 'Hi! Ask me anything about your uploaded file 👋',
       timestamp: new Date(),
     },
   ]);

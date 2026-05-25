@@ -43,32 +43,32 @@ export class ChatApiService {
 
       chunkCount++;
       const chunk = decoder.decode(value, { stream: true });
-      console.log(
-        `--- [STEP 3: RAW CHUNK #${chunkCount}] Length:`,
-        chunk.length,
-        '\nRaw String:',
-        chunk,
-      );
+      // console.log(
+      //   `--- [STEP 3: RAW CHUNK #${chunkCount}] Length:`,
+      //   chunk.length,
+      //   '\nRaw String:',
+      //   chunk,
+      // );
 
       const events = parser.parse(chunk);
-      console.log(
-        `--- [STEP 4: PARSER OUTPUT for Chunk #${chunkCount}] Events found:`,
-        events.length,
-        events,
-      );
+      // console.log(
+      //   `--- [STEP 4: PARSER OUTPUT for Chunk #${chunkCount}] Events found:`,
+      //   events.length,
+      //   events,
+      // );
 
       for (const event of events) {
         if (event.event === 'token') {
-          console.log(
-            `🚀 Triggering onToken() callback with value: "${event.data}"`,
-          );
+          // console.log(
+          //   `🚀 Triggering onToken() callback with value: "${event.data}"`,
+          // );
           onToken(event.data);
         }
         if (event.event === 'done') {
-          console.log(
-            '🏁 Stream structural end payload found ("done"):',
-            event.data,
-          );
+          // console.log(
+          //   '🏁 Stream structural end payload found ("done"):',
+          //   event.data,
+          // );
           finalResponse = JSON.parse(event.data);
         }
       }

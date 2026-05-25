@@ -12,7 +12,7 @@ import { ChatStateService } from './core/services/chat-state.service';
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  isSidebarOpen = signal(true);
+  isSidebarOpen = signal(false);
 
   constructor(public chatState: ChatStateService) {}
 
